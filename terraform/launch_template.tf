@@ -1,5 +1,4 @@
 resource "aws_launch_template" "app_lt" {
-  name   = "${var.project}-lt"
   image_id      = aws_ami_from_instance.from_instance.id
   instance_type = "t2.micro"
   key_name      = var.key_name  
