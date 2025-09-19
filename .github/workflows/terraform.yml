@@ -38,8 +38,10 @@ jobs:
       - name: Terraform Apply
         working-directory: ${{ env.TERRAFORM_DIR }}
         # run: terraform state show aws_launch_template.app_lt
-        run: terraform apply -auto-approve -var="key_name=${{ secrets.KEY_NAME }}"
+        # run: terraform apply -auto-approve -var="key_name=${{ secrets.KEY_NAME }}"
         # run: rm -rf .terraform 
+        run: aws ec2 run-instances --launch-template LaunchTemplateId=lt-0b20f6f46eef078c2,Version=$Default --dry-run
+
 
       - name: Success Message
         if: success()
