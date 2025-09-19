@@ -4,6 +4,6 @@ resource "aws_ami_from_instance" "from_instance" {
   snapshot_without_reboot = true
 
   tags = {
-    Name = "myapp-prod-ami"
+    Name = "${var.project}-ami"
   }
 }
