@@ -6,7 +6,7 @@ project = "myapp-prod"
 owner   = "devops-team"
 
 # Existing instance (to create AMI from)
-source_instance_id = "ami-0360c520857e3138f"
+source_instance_id = "i-0bd72f171234dd78b"
 
 # Networking
 vpc_cidr             = "10.10.0.0/16"
