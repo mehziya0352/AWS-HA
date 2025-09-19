@@ -22,6 +22,24 @@ data "aws_iam_policy_document" "ec2_assume_role" {
   }
 }
 
+
+resource "aws_iam_policy" "passrole_policy" {
+  name = "${var.project}-passrole-permission"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["iam:PassRole"]
+      Resource = aws_iam_role.ec2_role.arn
+    }]
+  })
+}
+resource "aws_iam_policy_attachment" "passrole_attach" {
+  name       = "${var.project}-passrole-attach"
+  roles      = [aws_iam_role.ec2_role.name]
+  policy_arn = aws_iam_policy.passrole_policy.arn
+}
+
 # -----------------------------
 # EC2 Role
 # -----------------------------
