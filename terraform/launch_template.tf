@@ -1,6 +1,6 @@
 resource "aws_launch_template" "app_lt" {
   name   = "${var.project}-lt"
-  image_id      = aws_ami_from_instance.from_instance.id
+  image_id      = aws_ami_from_instance.from_instance.source_instance_id
   instance_type = "t2.micro"
   key_name      = var.key_name  
   vpc_security_group_ids = [aws_security_group.app_sg.id]
