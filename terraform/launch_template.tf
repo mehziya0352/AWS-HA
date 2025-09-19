@@ -6,7 +6,7 @@ resource "aws_launch_template" "app_lt" {
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   user_data = filebase64("userdata.sh")
   iam_instance_profile {
-    arn = aws_iam_instance_profile.ec2_profile.arn
+    arn = aws_iam_instance_profile.ec2_profile.name
   }
 
   tag_specifications {
