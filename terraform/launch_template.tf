@@ -6,7 +6,7 @@ resource "aws_launch_template" "app_lt" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ec2_profile.arn
   }
-
+  update_default_version = true
   tag_specifications {
     resource_type = "instance"
     tags = {
