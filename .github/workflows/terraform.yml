@@ -24,7 +24,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
       - name: Terraform Init
@@ -37,7 +37,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform destroy -auto-approve -var="key_name=${{ secrets.KEY_NAME }}"
+        run: terraform apply -auto-approve -var="key_name=${{ secrets.KEY_NAME }}"
 
       - name: Success Message
         if: success()
