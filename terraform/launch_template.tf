@@ -4,7 +4,7 @@ resource "aws_launch_template" "app_lt" {
   key_name      = var.key_name  
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   iam_instance_profile {
-    arn = aws_iam_instance_profile.ec2_profile.arn
+    name = aws_iam_instance_profile.ec2_profile.name
   }
   update_default_version = true
   tag_specifications {
