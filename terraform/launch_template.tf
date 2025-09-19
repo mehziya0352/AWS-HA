@@ -4,7 +4,6 @@ resource "aws_launch_template" "app_lt" {
   instance_type = "t2.micro"
   key_name      = var.key_name  
   vpc_security_group_ids = [aws_security_group.app_sg.id]
-  user_data = filebase64("userdata.sh")
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_profile.name
   }
