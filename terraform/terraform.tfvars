@@ -3,7 +3,7 @@ aws_region = "us-east-1"
 
 # Project metadata (used for tagging)
 project = "app"
-owner   = "devops-team"
+
 
 # Existing instance (to create AMI from)
 source_instance_id = "i-0bd72f171234dd78b"
