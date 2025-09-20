@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "ec2_assume_role" {
 resource "aws_iam_role" "ec2_role" {
   name               = "${var.project}-ec2-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
-  tags = { Name = "${var.project}-ec2-role" }
+  tags               = { Name = "${var.project}-ec2-role" }
 }
 
 # -----------------------------
@@ -37,11 +37,13 @@ resource "aws_iam_role" "ec2_role" {
 resource "aws_iam_role_policy_attachment" "attach_cw" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = data.aws_iam_policy.cw_agent_policy.arn
+  depends_on = [aws_iam_role.ec2_role]
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ssm" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = data.aws_iam_policy.ssm_policy.arn
+  depends_on = [aws_iam_role.ec2_role]
 }
 
 # -----------------------------
@@ -59,10 +61,11 @@ resource "aws_iam_role_policy" "ec2_s3_read" {
   name   = "${var.project}-ec2-s3-read"
   role   = aws_iam_role.ec2_role.name
   policy = data.aws_iam_policy_document.s3_read_access.json
+  depends_on = [aws_iam_role.ec2_role]
 }
 
 # -----------------------------
-# PassRole Policy
+# PassRole Policy (for Launch Template)
 # -----------------------------
 data "aws_iam_policy_document" "passrole_doc" {
   statement {
@@ -80,6 +83,7 @@ resource "aws_iam_policy" "passrole_policy" {
 resource "aws_iam_role_policy_attachment" "passrole_attach" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.passrole_policy.arn
+  depends_on = [aws_iam_role.ec2_role]
 }
 
 # -----------------------------
@@ -88,4 +92,5 @@ resource "aws_iam_role_policy_attachment" "passrole_attach" {
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.project}-instance-profile"
   role = aws_iam_role.ec2_role.name
+  depends_on = [aws_iam_role.ec2_role]
 }
