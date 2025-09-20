@@ -96,6 +96,7 @@ resource "aws_autoscaling_group" "asg" {
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [aws_iam_instance_profile.ec2_profile]
 }
 
 # -----------------------------
