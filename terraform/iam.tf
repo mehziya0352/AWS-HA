@@ -16,19 +16,39 @@ data "aws_iam_policy_document" "ec2_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
-      type        = "Service"
+      type = "Service"
       identifiers = ["ec2.amazonaws.com"]
     }
   }
 }
 
+
+resource "aws_iam_policy" "passrole_policy" {
+  name = "${var.project}-passrole-permission"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["iam:PassRole"]
+      Resource = aws_iam_role.ec2_role.arn
+    }]
+  })
+}
+resource "aws_iam_policy_attachment" "passrole_attach" {
+  name       = "${var.project}-passrole-attach"
+  roles      = [aws_iam_role.ec2_role.name]
+  policy_arn = aws_iam_policy.passrole_policy.arn
+  }
+
 # -----------------------------
 # EC2 Role
 # -----------------------------
 resource "aws_iam_role" "ec2_role" {
-  name               = "${var.project}-ec2-role"
+  name = "${var.project}-ec2-role"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
-  tags               = { Name = "${var.project}-ec2-role" }
+  tags = {
+    Name = "${var.project}-ec2-role"
+  }
 }
 
 # -----------------------------
@@ -37,13 +57,11 @@ resource "aws_iam_role" "ec2_role" {
 resource "aws_iam_role_policy_attachment" "attach_cw" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = data.aws_iam_policy.cw_agent_policy.arn
-  depends_on = [aws_iam_role.ec2_role]
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ssm" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = data.aws_iam_policy.ssm_policy.arn
-  depends_on = [aws_iam_role.ec2_role]
 }
 
 # -----------------------------
@@ -61,29 +79,6 @@ resource "aws_iam_role_policy" "ec2_s3_read" {
   name   = "${var.project}-ec2-s3-read"
   role   = aws_iam_role.ec2_role.name
   policy = data.aws_iam_policy_document.s3_read_access.json
-  depends_on = [aws_iam_role.ec2_role]
-}
-
-# -----------------------------
-# PassRole Policy (for Launch Template)
-# -----------------------------
-data "aws_iam_policy_document" "passrole_doc" {
-  statement {
-    effect    = "Allow"
-    actions   = ["iam:PassRole"]
-    resources = [aws_iam_role.ec2_role.arn]
-  }
-}
-
-resource "aws_iam_policy" "passrole_policy" {
-  name   = "${var.project}-passrole-permission"
-  policy = data.aws_iam_policy_document.passrole_doc.json
-}
-
-resource "aws_iam_role_policy_attachment" "passrole_attach" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.passrole_policy.arn
-  depends_on = [aws_iam_role.ec2_role]
 }
 
 # -----------------------------
@@ -92,5 +87,4 @@ resource "aws_iam_role_policy_attachment" "passrole_attach" {
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "${var.project}-instance-profile"
   role = aws_iam_role.ec2_role.name
-  depends_on = [aws_iam_role.ec2_role]
 }
