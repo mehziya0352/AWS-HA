@@ -2,14 +2,14 @@
 # ALB
 # -----------------------------
 resource "aws_lb" "alb" {
-  name               = substr("${var.project}-alb", 0, 32)
+  name               = "${var.project}-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = [for s in aws_subnet.public : s.id]
   security_groups    = [aws_security_group.alb_sg.id]
 
   tags = {
-    Name = substr("${var.project}-alb", 0, 32)
+    Name = "${var.project}-alb"
   }
 }
 
@@ -17,7 +17,7 @@ resource "aws_lb" "alb" {
 # Target Group
 # -----------------------------
 resource "aws_lb_target_group" "tg" {
-  name        = substr("${var.project}-tg", 0, 32)
+  name        = "${var.project}-tg"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.this.id
@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "tg" {
   }
 
   tags = {
-    Name = substr("${var.project}-tg", 0, 32)
+    Name = "${var.project}-tg"
   }
 }
 
@@ -72,7 +72,7 @@ resource "aws_lb_listener" "https" {
 # Auto Scaling Group
 # -----------------------------
 resource "aws_autoscaling_group" "asg" {
-  name                       = substr("${var.project}-asg", 0, 255)
+  name                       = "${var.project}-asg"
   desired_capacity           = var.desired_capacity
   min_size                   = var.min_size
   max_size                   = var.max_size
@@ -82,7 +82,7 @@ resource "aws_autoscaling_group" "asg" {
 
   launch_template {
     id      = aws_launch_template.app_lt.id
-    version = aws_launch_template.app_lt.latest_version
+    version = "$Default"
   }
 
   target_group_arns = [aws_lb_target_group.tg.arn]
@@ -96,14 +96,13 @@ resource "aws_autoscaling_group" "asg" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [aws_iam_instance_profile.ec2_profile]
 }
 
 # -----------------------------
 # Target Tracking Policy
 # -----------------------------
 resource "aws_autoscaling_policy" "cpu_target" {
-  name                   = substr("${var.project}-target", 0, 255)
+  name                   = "${var.project}-target"
   policy_type            = "TargetTrackingScaling"
   autoscaling_group_name = aws_autoscaling_group.asg.name
 
