@@ -8,6 +8,7 @@ variable "project" {
 }
 
 
+
 # Existing instance to create AMI from
 variable "source_instance_id" { 
   type = string 
