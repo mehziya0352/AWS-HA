@@ -38,7 +38,7 @@ jobs:
       - name: Terraform Apply
         working-directory: ${{ env.TERRAFORM_DIR }}
         # run: terraform state show aws_launch_template.app_lt
-        run: terraform apply -auto-approve
+        run: terraform destroy -auto-approve
         env:
           TF_VAR_key_name: ${{ secrets.KEY_NAME }}
         # run: rm -rf .terraform 
