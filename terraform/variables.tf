@@ -36,7 +36,7 @@ variable "private_subnet_cidrs" {
 
 variable "instance_type" { 
   type = string
-  default = "t3.micro" 
+  default = "t2.micro" 
 }
 variable "key_name" { 
   type = string
