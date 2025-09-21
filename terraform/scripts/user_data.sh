@@ -6,12 +6,6 @@ export DEBIAN_FRONTEND=noninteractive
 # Update
 apt-get update -y
 apt-get upgrade -y
-
-# Install nginx
-apt-get install -y nginx
-systemctl enable nginx
-systemctl start nginx
-
 # Download and install CloudWatch Agent (Ubuntu)
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb -O /tmp/amazon-cloudwatch-agent.deb
 dpkg -i /tmp/amazon-cloudwatch-agent.deb || true
